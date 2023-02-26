@@ -1,0 +1,2 @@
+**/node_modules
+# ignore 不能添加dist 否则git actions会找不到dist文件 修改权限
