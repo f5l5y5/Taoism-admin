@@ -25,6 +25,7 @@ jobs:
                       release
                   draft: false
                   prerelease: false
+            - name: log
               run: |
                   echo ${{github.ref}}
 
