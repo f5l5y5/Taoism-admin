@@ -49,7 +49,7 @@ jobs:
                   context: .
                   file: ./deploy/Dockerfile
                   push: true
-                  tags: f5l5y5/taoism-admin:v0.0.7
+                  tags: f5l5y5/taoism-admin
 
             - name: ssh server run docker image
               uses: appleboy/ssh-action@master
