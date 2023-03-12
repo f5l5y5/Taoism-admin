@@ -27,6 +27,7 @@ jobs:
 
             - name: Set env
               run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
             - name: Test
               run: |
                   echo $RELEASE_VERSION
@@ -48,7 +49,7 @@ jobs:
                   context: .
                   file: ./deploy/Dockerfile
                   push: true
-                  tags: f5l5y5/taoism-admin:$RELEASE_VERSION
+                  tags: f5l5y5/taoism-admin:${{ env.RELEASE_VERSION }}
 
             - name: ssh server run docker image
               uses: appleboy/ssh-action@master
