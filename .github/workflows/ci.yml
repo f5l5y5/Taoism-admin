@@ -25,10 +25,12 @@ jobs:
                       release
                   draft: false
                   prerelease: false
+
             - name: log
               run: |
                   echo ${{github.ref}}
                   echo ${{ steps.vars.outputs.tag }}
+                  echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
             - name: Install and Build
               run: |
@@ -38,7 +40,7 @@ jobs:
             - name: Build and push Docker image
               run: |
                   docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-                  docker build -t taosim-admin .
+                  docker build -t f5l5y5/taosim-admin .
                   docker tag v1.0.0 ${{ secrets.DOCKER_REPOSITORY }}
                   docker push ${{ secrets.DOCKER_REPOSITORY }}
 
