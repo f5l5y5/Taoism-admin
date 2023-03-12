@@ -4,6 +4,7 @@ on:
         tags:
             - 'v*'
 
+
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
@@ -12,6 +13,13 @@ jobs:
               uses: actions/checkout@v3
               with:
                   persist-credentials: false
+      
+            - name: Set env
+                  run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+                - name: Test
+                  run: |
+                    echo $RELEASE_VERSION
+                    echo ${{ env.RELEASE_VERSION }}
 
             - name: Create Release
               id: create_release
@@ -29,8 +37,7 @@ jobs:
             - name: log
               run: |
                   echo ${{github.ref}}
-                  echo ${{ steps.vars.outputs.tag }}
-                  echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+                  echo ${{ env.RELEASE_VERSION }}
 
             - name: Install and Build
               run: |
@@ -40,7 +47,7 @@ jobs:
             - name: Build and push Docker image
               run: |
                   docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-                  docker build -t f5l5y5/taosim-admin .
+                  docker build -t taosim-admin .
                   docker tag v1.0.0 ${{ secrets.DOCKER_REPOSITORY }}
                   docker push ${{ secrets.DOCKER_REPOSITORY }}
 
