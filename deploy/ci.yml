@@ -1,0 +1,64 @@
+name: GitHub Actions Build and Deploy Demo
+on:
+    push:
+        tags:
+            - 'v*'
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  persist-credentials: false
+
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release ${{ github.ref }}
+                  body: |
+                      release
+                  draft: false
+                  prerelease: false
+
+
+            - name: Install and Build
+              run: |
+                  npm install
+                  npm run build
+                
+            — name: Login to DockerHub
+              uses: docker/login-action@v1
+              with:
+                username: ${{ secrets.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKER_PASSWORD }}
+
+            — name: Build and push
+                uses: docker/build-push-action@v2
+                with:
+                  context: .
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+
+            # - name: Build and push Docker image
+            #   run: |
+            #       docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            #       docker build -t taosim-admin .
+            #       docker tag ${{ env.RELEASE_VERSION }} ${{ secrets.DOCKER_REPOSITORY }}
+            #       docker push ${{ secrets.DOCKER_REPOSITORY }}
+
+            - name: ssh server run docker image
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SERVER_IP }}
+                  username: root
+                  password: ${{ secrets.SERVER_PASSWORD }}
+                  script: |
+                      whoami
+                      cd ~
+                      sh frontDeploy.sh ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWORD }}
