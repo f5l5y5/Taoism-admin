@@ -25,6 +25,8 @@ jobs:
                       release
                   draft: false
                   prerelease: false
+              run: |
+                  echo ${{github.ref}}
 
             - name: Install and Build
               run: |
