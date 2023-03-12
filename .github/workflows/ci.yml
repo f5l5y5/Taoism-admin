@@ -28,6 +28,8 @@ jobs:
             - name: log
               run: |
                   echo ${{github.ref}}
+                  echo $RELEASE_VERSION
+                  echo ${{ env.RELEASE_VERSION }}
 
             - name: Install and Build
               run: |
@@ -38,7 +40,6 @@ jobs:
               run: |
                   docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
                   docker build -t f5l5y5/taosim-admin:v1.0.0 .
-                  docker tag v1.0.0 ${{ secrets.DOCKER_REPOSITORY }}
                   docker push ${{ secrets.DOCKER_REPOSITORY }}
 
             - name: ssh server run docker image
