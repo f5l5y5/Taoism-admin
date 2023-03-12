@@ -14,8 +14,13 @@ jobs:
             - name: Build and push Docker image
               run: |
                   docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-                  docker build . --file Dockerfile -t taoism-admin
-                  docker push ${{ secrets.DOCKER_REPOSITORY }}
+
+            - name: push
+                id: docker_build
+              uses: docker/build-push-action@v2
+              with:
+                push: true
+                tags: f5l5y5/taoism-admin:latest
 
             # - name: ssh server run docker image
             #   uses: appleboy/ssh-action@master
