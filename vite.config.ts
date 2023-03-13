@@ -24,8 +24,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
 			open: true,
 			proxy: {
 				[env.VITE_APP_BASE_API]: {
-					// target: 'https://api.youlai.tech',
-					target: 'http://localhost:8000',
+					target: 'https://api.youlai.tech',
+					// target: 'http://localhost:8000',
 					changeOrigin: true,
 					rewrite: path => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), '')
 				}
